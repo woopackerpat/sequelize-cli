@@ -26,7 +26,7 @@ exports.createTodo = async (req, res, next) => {
 exports.getAllTodo = async (req, res, next) => {
   // const result = await Todo.findAll();
   // res.json(result);
-  const {  userId } = req.body;
+  const { userId } = req.body;
   try {
     const todos = await Todo.findAll({ where: { userId } });
     res.json({ todos: todos });
@@ -64,16 +64,42 @@ exports.deleteTodo = async (req, res, next) => {
   // }
 
   try {
-    const {id} = req.params;
-    const {userId} = req.body
-    const result = await Todo.destroy({where: {id, userId}})
+    const { id } = req.params;
+    const { userId } = req.body;
+    const result = await Todo.destroy({ where: { id, userId } });
     if (result === 0) {
+      createError("Todo with this id is not found", 400);
+    }
+    res.status(204).json();
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateTodo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { title, completed, dueDate, userId } = req.body;
+    // const newValue = {};
+    // if (!title) {
+    //   newValue.title = title
+    // }
+    // if (!completed) {
+    //   newValue.completed = completed
+    // }
+
+    // if (!dueDate) {
+    //   newValue.dueDate = dueDate;
+    // }
+    const result = await Todo.update(
+      { title, completed, dueDate },
+      { where: { id, userId } }
+    );
+    if (result[0] === 0) {
       createError('Todo with this id is not found', 400)
     }
-    res.status(204).json()
+    res.json({message: 'update todo succes'})
   } catch (err) {
     next(err)
   }
 };
-
-exports.updateTodo = (req, res) => {};
