@@ -20,9 +20,16 @@ module.exports = async (req, res, next) => {
       where: { id: decodedPayload.id },
     });
 
+    
     if (!user) {
-      createError("User not found", 400);
+        createError("User not found", 400);
     }
+    
+    if(decodedPayload.iat*1000 < new Date(user.lastUpdatePassword).getTime()) {
+        
+        createError("you are unauthorized", 401)
+    }
+
     req.user = user;
     next();
   } catch (err) {

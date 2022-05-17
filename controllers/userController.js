@@ -55,9 +55,10 @@ exports.updateUser = async (req, res, next) => {
     //   res.json(updatedUser)
 
     // เฉลย
-
+    
     const { email, oldPassword, newPassword, confirmNewPassword, birthDate } =
       req.body;
+      
 
     const isCorrectPassword = await bcrypt.compare(
       oldPassword,
@@ -71,10 +72,15 @@ exports.updateUser = async (req, res, next) => {
       createError("password di not match", 400);
     }
 
-    await User.update(
-      { email, password: newPassword, birthDate },
-      { where: { id: req.user.id } }
-    );
+    const value = { email, birthDate };
+
+    if (newPassword) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      value.lastUpdatePassword = new Date();
+      value.password = hashedPassword;
+    }
+
+    await User.update(value, { where: { id: req.user.id } });
 
     res.json({ message: "update success" });
   } catch (err) {
@@ -105,7 +111,7 @@ exports.login = async (req, res, next) => {
     }
     // const result = await bcrypt.compare(password, )
 
-    const secretKey = process.env.JWT_SECRET_KEY || 'hello';;
+    const secretKey = process.env.JWT_SECRET_KEY || "hello";
     const payload = {
       id: user.id,
       username,
