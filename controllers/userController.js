@@ -105,7 +105,7 @@ exports.login = async (req, res, next) => {
     }
     // const result = await bcrypt.compare(password, )
 
-    const secretKey = "1q2w3e";
+    const secretKey = process.env.JWT_SECRET_KEY || 'hello';;
     const payload = {
       id: user.id,
       username,

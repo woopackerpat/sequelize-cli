@@ -1,10 +1,10 @@
-const {User} = require('../models')
+const { User } = require("../models");
 const jwt = require("jsonwebtoken");
-const createError = require('./error')
-
+const createError = require("./error");
 
 module.exports = async (req, res, next) => {
-    try {const { authorization } = req.headers;
+  try {
+    const { authorization } = req.headers;
     if (!authorization || !authorization.startsWith("Bearer")) {
       createError("you are unauthorized", 401);
     }
@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
     if (!token) {
       createError("you are unauthorized", 401);
     }
-    const secretKey = "1q2w3e";
+    const secretKey = process.env.JWT_SECRET_KEY || 'hello';
     const decodedPayload = jwt.verify(token, secretKey);
 
     //เช็คว่ามี user นี้หรือไม่
@@ -23,9 +23,9 @@ module.exports = async (req, res, next) => {
     if (!user) {
       createError("User not found", 400);
     }
-    req.user = user
-    next()}
-    catch(err) {
-        next(err)
-    }
-}
+    req.user = user;
+    next();
+  } catch (err) {
+    next(err);
+  }
+};

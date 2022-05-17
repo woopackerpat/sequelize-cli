@@ -1,3 +1,6 @@
+require('dotenv').config()
+console.log(process.env)
+
 const express = require("express");
 const app = express();
 const cors = require('cors')
@@ -23,5 +26,5 @@ app.use(notFoundMiddleware)
 app.use(errorMiddleware)
 
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Server run on port ${port}`));
