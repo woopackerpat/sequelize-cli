@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./config/passport')
 console.log(process.env)
 
 const express = require("express");
@@ -9,6 +10,7 @@ const todoRoute = require('./routes/todoRoute')
 const errorMiddleware = require('./middlewares/error')
 const notFoundMiddleware = require('./middlewares/notfound');
 const authenticate = require("./middlewares/authenticate");
+const passportJwt = require('./middlewares/passportJwt')
 
 app.use(cors())
 app.use(express.urlencoded({extended: false}))
