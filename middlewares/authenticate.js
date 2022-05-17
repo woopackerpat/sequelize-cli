@@ -1,9 +1,10 @@
 const {User} = require('../models')
 const jwt = require("jsonwebtoken");
+const createError = require('./error')
 
 
 module.exports = async (req, res, next) => {
-    const { authorization } = req.headers;
+    try {const { authorization } = req.headers;
     if (!authorization || !authorization.startsWith("Bearer")) {
       createError("you are unauthorized", 401);
     }
@@ -23,5 +24,8 @@ module.exports = async (req, res, next) => {
       createError("User not found", 400);
     }
     req.user = user
-    next()
+    next()}
+    catch(err) {
+        next(err)
+    }
 }
