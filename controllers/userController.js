@@ -55,10 +55,9 @@ exports.updateUser = async (req, res, next) => {
     //   res.json(updatedUser)
 
     // เฉลย
-    
+
     const { email, oldPassword, newPassword, confirmNewPassword, birthDate } =
       req.body;
-      
 
     const isCorrectPassword = await bcrypt.compare(
       oldPassword,
@@ -69,7 +68,7 @@ exports.updateUser = async (req, res, next) => {
     }
 
     if (newPassword !== confirmNewPassword) {
-      createError("password di not match", 400);
+      createError("password did not match", 400);
     }
 
     const value = { email, birthDate };
