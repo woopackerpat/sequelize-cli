@@ -4,7 +4,7 @@ const todoControllers = require('../controllers/todoController')
 const userMiddleware = require('../middlewares/user')
 
 
-router.post('/', userMiddleware.getUserById ,todoControllers.createTodo)
+router.post('/' ,todoControllers.createTodo)
 router.get('/', todoControllers.getAllTodo)
 router.get('/:id', todoControllers.getTodoById)
 router.put('/:id', todoControllers.updateTodo)

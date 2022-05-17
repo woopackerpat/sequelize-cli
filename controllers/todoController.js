@@ -1,5 +1,6 @@
 const createError = require("../utils/createError");
 const { Todo, User } = require("../models");
+const jwt = require("jsonwebtoken");
 
 exports.createTodo = async (req, res, next) => {
   try {
@@ -26,9 +27,28 @@ exports.createTodo = async (req, res, next) => {
 exports.getAllTodo = async (req, res, next) => {
   // const result = await Todo.findAll();
   // res.json(result);
-  const { userId } = req.body;
   try {
-    const todos = await Todo.findAll({ where: { userId } });
+    const { authorization } = req.headers;
+    if (!authorization || !authorization.startsWith("Bearer")) {
+      createError("you are unauthorized", 401);
+    }
+    const [, token] = authorization.split(" ");
+    if (!token) {
+      createError("you are unauthorized", 401);
+    }
+    const secretKey = "1q2w3e";
+    const decodedPayload = jwt.verify(token, secretKey);
+
+    //เช็คว่ามี user นี้หรือไม่
+    const user = await User.findOne({
+      where: { id: decodedPayload.id },
+    });
+    if (!user) {
+      createError("User not found", 400);
+    }
+
+    // ถ้ามี user ให้ดึง Todos ที่ถูกสร้างโดย user นั้น
+    const todos = await Todo.findAll({ where: { userId: user.id } });
     res.json({ todos: todos });
   } catch (err) {
     next(err);
@@ -96,10 +116,10 @@ exports.updateTodo = async (req, res, next) => {
       { where: { id, userId } }
     );
     if (result[0] === 0) {
-      createError('Todo with this id is not found', 400)
+      createError("Todo with this id is not found", 400);
     }
-    res.json({message: 'update todo succes'})
+    res.json({ message: "update todo succes" });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
