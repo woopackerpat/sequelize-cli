@@ -5,9 +5,9 @@ const { Todo, User } = require("../models");
 
 exports.createTodo = async (req, res, next) => {
   try {
-    const { title, completed, dueDate, userId } = req.body;
+    const { title, completed, dueDate } = req.body;
 
-    const user = await User.findOne({ where: { id: userId ?? 0 } });
+    const user = await User.findOne({ where: { id: req.user.id ?? 0 } });
     if (!user) {
       createError("User not found", 400);
     }
@@ -18,7 +18,7 @@ exports.createTodo = async (req, res, next) => {
     // if (!userId) { //validate ตอน findone
     //   createError("userId should not be null");
     // }
-    const todo = await Todo.create({ title, completed, dueDate, userId });
+    const todo = await Todo.create({ title, completed, dueDate, userId: req.user.id });
     res.status(201).json({ todo });
   } catch (err) {
     next(err);
@@ -42,9 +42,9 @@ exports.getAllTodo = async (req, res, next) => {
 exports.getTodoById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
+    
     const todo = await Todo.findOne({
-      where: { id, userId },
+      where: { id, userId: req.user.id },
     });
     res.json({ todo });
   } catch (err) {
@@ -69,8 +69,8 @@ exports.deleteTodo = async (req, res, next) => {
 
   try {
     const { id } = req.params;
-    const { userId } = req.body;
-    const result = await Todo.destroy({ where: { id, userId } });
+    
+    const result = await Todo.destroy({ where: { id, userId: req.user.id } });
     if (result === 0) {
       createError("Todo with this id is not found", 400);
     }
@@ -83,7 +83,7 @@ exports.deleteTodo = async (req, res, next) => {
 exports.updateTodo = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, completed, dueDate, userId } = req.body;
+    const { title, completed, dueDate } = req.body;
     // const newValue = {};
     // if (!title) {
     //   newValue.title = title
@@ -97,7 +97,7 @@ exports.updateTodo = async (req, res, next) => {
     // }
     const result = await Todo.update(
       { title, completed, dueDate },
-      { where: { id, userId } }
+      { where: { id, userId: req.user.id } }
     );
     if (result[0] === 0) {
       createError("Todo with this id is not found", 400);

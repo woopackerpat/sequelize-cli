@@ -4,7 +4,8 @@ const cors = require('cors')
 const userRoute = require('./routes/userRoute')
 const todoRoute = require('./routes/todoRoute')
 const errorMiddleware = require('./middlewares/error')
-const notFoundMiddleware = require('./middlewares/notfound')
+const notFoundMiddleware = require('./middlewares/notfound');
+const authenticate = require("./middlewares/authenticate");
 
 app.use(cors())
 app.use(express.urlencoded({extended: false}))
@@ -12,7 +13,7 @@ app.use(express.json())
 
 // REST API: handle resource Todos
 // CREATE, UPDATE, DELETE, GETALL, GETBYID
-app.use('/todos', todoRoute)
+app.use('/todos', authenticate,todoRoute)
 
 // REST API: handle resource Users
 // CREATE, UPDATE
