@@ -8,6 +8,17 @@ exports.register = async (req, res, next) => {
     // const body = req.body;
     const { username, email, password, confirmPassword } = req.body;
 
+  
+    if(!username) {
+      createError("username is required", 400)
+    }
+
+    const user = await User.findOne({ where: { username } });
+    console.log(user)
+    if (user) {
+      createError("username is already used", 400);
+    }
+
     if (!password) {
       createError("Password is required");
     }

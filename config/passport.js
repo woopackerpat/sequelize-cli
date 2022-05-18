@@ -19,7 +19,7 @@ passport.use(
       }
 
       if (
-        decodedPayload.iat * 1000 <
+        payload.iat * 1000 <
         new Date(user.lastUpdatePassword).getTime()
       ) {
         done(new Error("you are unauthorized"), 401);

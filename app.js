@@ -18,7 +18,7 @@ app.use(express.json())
 
 // REST API: handle resource Todos
 // CREATE, UPDATE, DELETE, GETALL, GETBYID
-app.use('/todos', authenticate,todoRoute)
+app.use('/todos', passportJwt,todoRoute)
 
 // REST API: handle resource Users
 // CREATE, UPDATE
