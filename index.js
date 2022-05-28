@@ -1,7 +1,7 @@
 const { sequelize, User } = require("./models");
 
 
-sequelize.sync({force: true});
+// sequelize.sync({force: true});
 
 // const run = async () => {
 //   try {

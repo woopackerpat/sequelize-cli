@@ -135,3 +135,7 @@ exports.login = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getMe = (req, res) => {
+  res.json({user: req.user})
+}
