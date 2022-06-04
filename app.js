@@ -11,7 +11,7 @@ const errorMiddleware = require('./middlewares/error')
 const notFoundMiddleware = require('./middlewares/notfound');
 const authenticate = require("./middlewares/authenticate");
 const passportJwt = require('./middlewares/passportJwt')
-
+ 
 app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
